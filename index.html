@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#b91c1c" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <title>אימון Present Progressive — הפועל ב"ש</title>
+  <style>
+    :root{
+      --bg1:#09090b; --bg2:#18181b; --card:#0b1220;
+      --muted:#a1a1aa; --text:#fafafa;
+      --red:#dc2626; --red2:#b91c1c; --green:#16a34a; --amber:#f59e0b;
+      --border:#27272a;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans",sans-serif;
+      background: linear-gradient(180deg, var(--bg1), var(--bg2));
+      color:var(--text);
+    }
+    .wrap{max-width:980px;margin:0 auto;padding:16px 14px 28px}
+    .safe{padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);}
+    .header{display:flex;gap:12px;justify-content:space-between;align-items:flex-start;margin-top:8px}
+    .brand{display:flex;gap:10px;align-items:center}
+    .logo{
+      width:42px;height:42px;border-radius:16px;background:var(--red);
+      display:flex;align-items:center;justify-content:center;font-weight:900;color:white;
+      box-shadow: 0 10px 25px rgba(0,0,0,.35);
+    }
+    h1{font-size:20px;margin:0 0 2px}
+    .sub{color:var(--muted);font-size:13px;margin:0}
+    .pillRow{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+    .pill{
+      font-size:12px;padding:6px 10px;border-radius:999px;
+      border:1px solid var(--border); background: rgba(255,255,255,.04);
+      display:inline-flex;gap:6px;align-items:center;
+    }
+    .pill.badge{border-color:#2a0d0d;background:rgba(220,38,38,.15);color:#fecaca;font-weight:700}
+    .grid{display:grid;gap:12px;margin-top:14px}
+    .tabs{
+      display:grid;grid-template-columns:repeat(3,1fr);
+      background: rgba(255,255,255,.04);
+      border:1px solid var(--border);
+      padding:6px;border-radius:18px;
+    }
+    .tabBtn{
+      border:0;background:transparent;color:#e4e4e7;
+      padding:10px 10px;border-radius:14px;font-weight:800;cursor:pointer;
+    }
+    .tabBtn.active{background:var(--red2); color:white}
+    .card{
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.28);
+      border-radius:18px;
+      padding:14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    .titleRow{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .card h2{margin:0;font-size:16px}
+    .desc{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.5}
+    .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+    .btn{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      color:white;padding:10px 12px;border-radius:16px;
+      font-weight:800;cursor:pointer;
+    }
+    .btn.primary{background:var(--red2); border-color:#7f1d1d}
+    .btn.primary:hover{background:var(--red)}
+    .btn.green{background:var(--green); border-color:#14532d}
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+    .btn.small{padding:8px 10px;border-radius:14px;font-size:13px}
+    .select, .input{
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.35);
+      color:white;border-radius:14px;padding:10px 10px;
+      font-weight:700;
+    }
+    .input{width:100%}
+    .label{font-size:12px;color:#e4e4e7;margin-bottom:6px;font-weight:800}
+    .kpis{display:grid;gap:10px;grid-template-columns:repeat(2,1fr)}
+    @media (min-width:860px){ .kpis{grid-template-columns:repeat(4,1fr)} }
+    .kpi{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      border-radius:18px;padding:12px;
+    }
+    .kpi .k{color:var(--muted);font-size:12px}
+    .kpi .v{font-size:20px;font-weight:1000;margin-top:2px}
+    .bar{height:10px;border-radius:999px;background: rgba(255,255,255,.08); overflow:hidden;margin-top:8px}
+    .bar > div{height:100%;background: linear-gradient(90deg, var(--red2), #fb7185); width:0%}
+    .box{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      border-radius:18px;padding:12px;
+    }
+    .qmeta{color:var(--muted);font-size:12px}
+    .qtext{font-size:15px;font-weight:900;margin-top:6px}
+    .choices{display:grid;gap:10px;margin-top:10px}
+    @media(min-width:860px){ .choices{grid-template-columns:repeat(2,1fr)} }
+    .choice{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      color:white;border-radius:18px;padding:12px;
+      text-align:right;cursor:pointer;font-weight:850;
+    }
+    .choice.selected{background: rgba(220,38,38,.25); border-color:#7f1d1d}
+    .feedback{
+      margin-top:12px;border-radius:18px;padding:12px;border:1px solid var(--border);
+      background: rgba(0,0,0,.32);
+    }
+    .tag{
+      display:inline-flex;gap:6px;align-items:center;
+      padding:6px 10px;border-radius:999px;font-weight:900;font-size:12px;
+    }
+    .tag.ok{background: rgba(22,163,74,.15); color:#bbf7d0; border:1px solid #14532d}
+    .tag.bad{background: rgba(220,38,38,.15); color:#fecaca; border:1px solid #7f1d1d}
+    .muted{color:var(--muted)}
+    .mini{font-size:12px;color:var(--muted)}
+    .hr{height:1px;background:rgba(255,255,255,.08);margin:12px 0}
+    .footerTip{margin-top:18px;text-align:center;color:var(--muted);font-size:12px}
+    .toggle{display:flex;gap:10px;align-items:center}
+    .switch{
+      width:46px;height:28px;border-radius:999px;border:1px solid var(--border);
+      background: rgba(255,255,255,.06); position:relative; cursor:pointer;
+    }
+    .knob{
+      width:22px;height:22px;border-radius:999px;background:white; position:absolute; top:2px; right:2px; transition:.18s;
+    }
+    .switch.on{background: rgba(22,163,74,.25); border-color:#14532d}
+    .switch.on .knob{right:22px}
+    .reviewItem{border:1px solid var(--border);border-radius:18px;padding:12px;background:rgba(255,255,255,.03);margin-top:10px}
+    .reviewGrid{display:grid;gap:10px;margin-top:8px}
+    @media(min-width:860px){ .reviewGrid{grid-template-columns:repeat(2,1fr)} }
+    .reviewCell{border:1px solid var(--border);border-radius:18px;padding:10px;background:rgba(0,0,0,.28)}
+    .reviewCell .k{color:var(--muted);font-size:12px}
+    .reviewCell .v{font-weight:900;margin-top:2px}
+  </style>
+</head>
+
+<body class="safe">
+  <div class="wrap">
+    <div class="header">
+      <div class="brand">
+        <div class="logo">ב"ש</div>
+        <div>
+          <h1>אימון Present Progressive</h1>
+          <p class="sub">קצר, חד, ומביא נקודות — כמו הפועל באר שבע 🔴⚪</p>
+        </div>
+      </div>
+      <div class="pillRow">
+        <div id="badgePill" class="pill badge">מתחיל אימון ⚽</div>
+        <div class="pill">🔥 רצף: <b id="streak">0</b> &nbsp; | &nbsp; 🏆 שיא מבחן: <b id="best">0%</b></div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="tabs">
+        <button class="tabBtn active" data-tab="learn">ללמוד</button>
+        <button class="tabBtn" data-tab="practice">לתרגל</button>
+        <button class="tabBtn" data-tab="test">מבחן</button>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="card">
+        <div class="titleRow">
+          <h2>הגדרות אימון</h2>
+          <button class="btn small" id="resetAllBtn">איפוס</button>
+        </div>
+        <p class="desc">בחר מצב (אמריקאי/הקלדה), פוקוס (שלילה/שאלות), ואפשר גם הקראה באנגלית.</p>
+
+        <div class="row" style="margin-top:10px">
+          <div style="min-width:220px;flex:1">
+            <div class="label">מצב תשובה</div>
+            <select id="modeSel" class="select" style="width:100%">
+              <option value="mcq">אמריקאי (קל ומהיר)</option>
+              <option value="typing">הקלדה (כמו במבחן)</option>
+            </select>
+          </div>
+
+          <div style="min-width:220px;flex:1">
+            <div class="label">פוקוס</div>
+            <select id="focusSel" class="select" style="width:100%">
+              <option value="all">הכל</option>
+              <option value="affirmative">חיובי</option>
+              <option value="negative">שלילה</option>
+              <option value="yesno">שאלות כן/לא</option>
+              <option value="wh">שאלות WH</option>
+            </select>
+          </div>
+
+          <div style="min-width:220px;flex:1">
+            <div class="label">הקראה</div>
+            <div class="toggle">
+              <div id="audioSwitch" class="switch on" role="switch" aria-checked="true">
+                <div class="knob"></div>
+              </div>
+              <div class="mini">הקראת משפטים (English)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="card">
+        <div class="titleRow">
+          <h2>סטטיסטיקה</h2>
+          <div class="mini">מטרה: דיוק 90% ושיא מבחן חדש — יאללה ב"ש!</div>
+        </div>
+
+        <div class="kpis" style="margin-top:10px">
+          <div class="kpi">
+            <div class="k">דיוק</div>
+            <div class="v"><span id="acc">0</span>%</div>
+            <div class="bar"><div id="accBar"></div></div>
+          </div>
+          <div class="kpi">
+            <div class="k">סה"כ תשובות</div>
+            <div class="v" id="totalAns">0</div>
+            <div class="mini">נכונות: <b id="correctAns">0</b></div>
+          </div>
+          <div class="kpi">
+            <div class="k">מבחן אחרון</div>
+            <div class="v" id="lastScore">—</div>
+            <div class="mini" id="lastAt"></div>
+          </div>
+          <div class="kpi">
+            <div class="k">משימת היום</div>
+            <div class="v" style="font-size:14px">10 תרגולים + מבחן</div>
+            <div class="mini">חימום ואז על המגרש</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEARN -->
+      <div id="learn" class="card tabPanel">
+        <div class="titleRow">
+          <h2>ללמוד — Present Progressive</h2>
+          <button class="btn small primary" id="goPracticeFromLearn">מתחילים תרגול ⚽</button>
+        </div>
+        <p class="desc">מבנה: <b>am/is/are + verb-ing</b>. מתאים לפעולה שקורית עכשיו או זמנית בתקופה הנוכחית.</p>
+
+        <div class="box" style="margin-top:12px">
+          <b>חיובי (Affirmative)</b><br/>
+          <span class="muted">Subject + am/is/are + verb-ing</span>
+          <div class="hr"></div>
+          דוגמאות: <br/>
+          • I am studying now. <button class="btn small" data-say="I am studying now.">🔊</button><br/>
+          • Hapoel Be'er Sheva is playing tonight. <button class="btn small" data-say="Hapoel Be'er Sheva is playing tonight.">🔊</button><br/>
+          • They are winning the game! <button class="btn small" data-say="They are winning the game!">🔊</button>
+        </div>
+
+        <div class="box" style="margin-top:12px">
+          <b>שלילה (Negative)</b><br/>
+          <span class="muted">am not / isn't / aren't + verb-ing</span>
+          <div class="hr"></div>
+          דוגמאות: <br/>
+          • She isn't watching the match now. <button class="btn small" data-say="She isn't watching the match now.">🔊</button><br/>
+          • We aren't losing today. <button class="btn small" data-say="We aren't losing today.">🔊</button>
+        </div>
+
+        <div class="box" style="margin-top:12px">
+          <b>שאלות (Questions)</b><br/>
+          <span class="muted">Yes/No: Am/Is/Are + subject + verb-ing?</span><br/>
+          <span class="muted">WH: What/Where/Why/Who + am/is/are + subject + verb-ing?</span>
+          <div class="hr"></div>
+          דוגמאות: <br/>
+          • Are you training now? <button class="btn small" data-say="Are you training now?">🔊</button><br/>
+          • What are you doing now? <button class="btn small" data-say="What are you doing now?">🔊</button>
+        </div>
+
+        <div class="box" style="margin-top:12px;background:rgba(220,38,38,.12);border-color:#7f1d1d">
+          <b>שיטת זיכרון (כמו תוכנית משחק):</b>
+          <ul style="margin:8px 0 0; padding-right:18px; color:#e4e4e7; font-weight:700">
+            <li><b>עכשיו</b> → Present Progressive.</li>
+            <li><b>שלילה</b> → not / isn't / aren't.</li>
+            <li><b>שאלה</b> → am/is/are בתחילת המשפט.</li>
+          </ul>
+        </div>
+
+        <div class="row" style="margin-top:12px">
+          <button class="btn primary" id="startTestFromLearn">מבחן 20 שאלות + ציון</button>
+        </div>
+      </div>
+
+      <!-- PRACTICE -->
+      <div id="practice" class="card tabPanel" style="display:none">
+        <div class="titleRow">
+          <h2>תרגול מהיר — 10 שאלות</h2>
+          <div class="row">
+            <button class="btn small" id="refreshPractice">רענון סט</button>
+            <button class="btn small" id="speakAnswerPractice">🔊 שמע תשובה</button>
+          </div>
+        </div>
+        <p class="desc">ענה וקבל פידבק מיידי — כמו חימום לפני משחק.</p>
+
+        <div class="box" id="practiceBox">
+          <!-- dynamic -->
+        </div>
+
+        <div id="practiceArea" style="margin-top:10px">
+          <!-- dynamic -->
+        </div>
+
+        <div id="practiceFeedback" class="feedback" style="display:none"></div>
+      </div>
+
+      <!-- TEST -->
+      <div id="test" class="card tabPanel" style="display:none">
+        <div class="titleRow">
+          <h2>מבחן — 20 שאלות + ציון</h2>
+          <div class="row">
+            <button class="btn small" id="startTestBtn">התחל מבחן</button>
+            <button class="btn small" id="speakAnswerTest">🔊 שמע תשובה</button>
+          </div>
+        </div>
+        <p class="desc">בסוף תקבל ציון + סקירת טעויות.</p>
+
+        <div id="testBody" class="box">
+          <div class="muted">לחץ על “התחל מבחן”. מומלץ לבחור פוקוס לפני שמתחילים.</div>
+        </div>
+      </div>
+
+      <div class="footerTip">
+        טיפ לאייפון: פתחו ב‑Safari → Share → <b>Add to Home Screen</b> כדי שזה ייראה כמו אפליקציה.
+      </div>
+    </div>
+  </div>
+
+<script>
+  // ---------- Data ----------
+  const STORAGE_KEY = "pp_hbs_v1";
+  const LESSON_SPEAK_BTNS = () => document.querySelectorAll("[data-say]");
+
+  const QUESTION_BANK = [
+    {id:"q1", type:"affirmative", he:"תרגם לאנגלית: אני לומד עכשיו.", prompt:"Translate", answer:"i am studying now.",
+      choices:["I am studying now.","I study now.","I am study now.","I am studying every day."]},
+    {id:"q2", type:"affirmative", he:"בחר את המשפט הנכון: הוא משחק כדורגל עכשיו.", prompt:"Choose", answer:"he is playing football now.",
+      choices:["He is playing football now.","He are playing football now.","He is play football now.","He plays football now."]},
+    {id:"q3", type:"negative", he:"השלם: She ____ (not/watch) the match now.", prompt:"Fill", answer:\"she isn't watching the match now.\",
+      choices:[\"She isn't watching the match now.\",\"She doesn't watching the match now.\",\"She not is watching the match now.\",\"She aren't watching the match now.\"]},
+    {id:"q4", type:"negative", he:"תרגם לאנגלית: אנחנו לא מנצחים היום.", prompt:"Translate", answer:"we aren't winning today.",
+      choices:["We aren't winning today.","We don't winning today.","We isn't winning today.","We not are winning today."]},
+    {id:"q5", type:"yesno", he:"בחר את השאלה הנכונה: אתה מתאמן עכשיו?", prompt:"Choose Q", answer:"are you training now?",
+      choices:["Are you training now?","Do you training now?","You are training now?","Is you training now?"]},
+    {id:"q6", type:"yesno", he:"סדר את המילים לשאלה: (is / he / wearing / the / red / shirt)", prompt:"Arrange", answer:"is he wearing the red shirt?",
+      choices:["Is he wearing the red shirt?","He is wearing the red shirt?","Is wearing he the red shirt?","Is he wear the red shirt?"]},
+    {id:"q7", type:"wh", he:"בחר את שאלת ה-WH הנכונה: מה אתה עושה עכשיו?", prompt:"Choose WH", answer:"what are you doing now?",
+      choices:["What are you doing now?","What do you doing now?","What are you do now?","What is you doing now?"]},
+    {id:"q8", type:"wh", he:"השלם: Where ____ (they/go) right now?", prompt:"Fill", answer:"where are they going right now?",
+      choices:["Where are they going right now?","Where do they going right now?","Where are they go right now?","Where is they going right now?"]},
+    {id:"q9", type:"affirmative", he:"בחר את המשפט הנכון: הפועל באר שבע משחקת הערב.", prompt:"Choose", answer:\"hapoel be'er sheva is playing tonight.\",
+      choices:[\"Hapoel Be'er Sheva is playing tonight.\",\"Hapoel Be'er Sheva are playing tonight.\",\"Hapoel Be'er Sheva playing tonight.\",\"Hapoel Be'er Sheva plays tonight now.\"]},
+    {id:"q10", type:"negative", he:"תרגם לאנגלית: הוא לא רץ עכשיו.", prompt:"Translate", answer:"he isn't running now.",
+      choices:["He isn't running now.","He doesn't running now.","He not is running now.","He aren't running now."]},
+    {id:"q11", type:"yesno", he:"בחר את השאלה הנכונה: האם הם שרים ביציע?", prompt:"Choose Q", answer:"are they singing in the stands?",
+      choices:["Are they singing in the stands?","Do they singing in the stands?","Are they sing in the stands?","Is they singing in the stands?"]},
+    {id:"q12", type:"wh", he:"בחר את השאלה הנכונה: למה אתם צועקים?", prompt:"Choose WH", answer:"why are you shouting?",
+      choices:["Why are you shouting?","Why do you shouting?","Why are you shout?","Why is you shouting?"]},
+    {id:"q13", type:"affirmative", he:"השלם: I ____ (watch) the game now.", prompt:"Fill", answer:"i am watching the game now.",
+      choices:["I am watching the game now.","I watching the game now.","I am watch the game now.","I watch the game now."]},
+    {id:"q14", type:"negative", he:"השלם: They ____ (not/score) at the moment.", prompt:"Fill", answer:"they aren't scoring at the moment.",
+      choices:["They aren't scoring at the moment.","They don't scoring at the moment.","They isn't scoring at the moment.","They not are scoring at the moment."]},
+    {id:"q15", type:"yesno", he:"תרגם לאנגלית: האם אני עושה את זה נכון?", prompt:"Translate Q", answer:"am i doing it right?",
+      choices:["Am I doing it right?","Do I doing it right?","Am I do it right?","I am doing it right?"]},
+    {id:"q16", type:"wh", he:"השלם: What ____ (he/do) now?", prompt:"Fill", answer:"what is he doing now?",
+      choices:["What is he doing now?","What does he doing now?","What is he do now?","What are he doing now?"]},
+    {id:"q17", type:"affirmative", he:"בחר את המשפט הנכון: אנחנו מתאמנים השבוע.", prompt:"Choose", answer:"we are training this week.",
+      choices:["We are training this week.","We train this week.","We are train this week.","We is training this week."]},
+    {id:"q18", type:"negative", he:"בחר את המשפט הנכון: אני לא עובד עכשיו.", prompt:"Choose", answer:"i am not working now.",
+      choices:["I am not working now.","I don't working now.","I am not work now.","I not am working now."]},
+    {id:"q19", type:"yesno", he:"בחר את השאלה הנכונה: האם היא הולכת לבית ספר עכשיו?", prompt:"Choose Q", answer:"is she going to school now?",
+      choices:["Is she going to school now?","Does she going to school now?","Is she go to school now?","Are she going to school now?"]},
+    {id:"q20", type:"wh", he:"תרגם לאנגלית: איפה אנחנו יושבים?", prompt:"Translate WH", answer:"where are we sitting?",
+      choices:["Where are we sitting?","Where do we sitting?","Where are we sit?","Where is we sitting?"]},
+  ];
+
+  // ---------- Helpers ----------
+  const $ = (s) => document.querySelector(s);
+  const $$ = (s) => Array.from(document.querySelectorAll(s));
+  const norm = (s) => (s||"").trim().replace(/\s+/g," ").toLowerCase().replace(/[“”]/g,'"').replace(/[’]/g,"'");
+  const shuffle = (arr) => {
+    const a=[...arr];
+    for(let i=a.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [a[i],a[j]]=[a[j],a[i]];
+    }
+    return a;
+  };
+  const pick = (count, focus) => {
+    const pool = focus==="all" ? QUESTION_BANK : QUESTION_BANK.filter(q=>q.type===focus);
+    return shuffle(pool).slice(0, Math.min(count, pool.length));
+  };
+
+  function canSpeak(){ return "speechSynthesis" in window; }
+  function speak(text){
+    if(!state.settings.audio) return;
+    if(!canSpeak()) return;
+    try{
+      window.speechSynthesis.cancel();
+      const u=new SpeechSynthesisUtterance(text);
+      u.lang="en-US"; u.rate=0.95;
+      window.speechSynthesis.speak(u);
+    }catch(e){}
+  }
+
+  function badgeFrom(stats){
+    const acc = stats.totalAnswered ? Math.round((stats.correctAnswered/stats.totalAnswered)*100) : 0;
+    if((stats.bestTestScore||0)>=95 && (stats.streak||0)>=7) return "אלוף ה‑Ving 🏆";
+    if((stats.bestTestScore||0)>=90) return "כוכב הדקדוק ⭐";
+    if(acc>=80 && (stats.totalAnswered||0)>=20) return "בדרך לאליפות 🔥";
+    if((stats.totalAnswered||0)>=5) return "מתחמם ביציע 👏";
+    return "מתחיל אימון ⚽";
+  }
+
+  // ---------- State ----------
+  const state = {
+    tab:"learn",
+    settings:{ mode:"mcq", focus:"all", audio:true },
+    stats:{ totalAnswered:0, correctAnswered:0, streak:0, bestTestScore:0, lastTestScore:null, lastTestAt:null },
+    practice:{ items:[], idx:0, answered:false, given:null, ok:null },
+    test:{ inProgress:false, items:[], idx:0, answers:{}, score:null, finished:false }
+  };
+
+  function load(){
+    try{
+      const raw=localStorage.getItem(STORAGE_KEY);
+      if(!raw) return;
+      const data=JSON.parse(raw);
+      if(data.settings) state.settings={...state.settings,...data.settings};
+      if(data.stats) state.stats={...state.stats,...data.stats};
+    }catch(e){}
+  }
+  function save(){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({settings:state.settings, stats:state.stats}));
+    }catch(e){}
+  }
+
+  // ---------- UI Update ----------
+  function updateStatsUI(){
+    const total=state.stats.totalAnswered;
+    const correct=state.stats.correctAnswered;
+    const acc= total ? Math.round((correct/total)*100) : 0;
+
+    $("#acc").textContent=acc;
+    $("#accBar").style.width=acc+"%";
+    $("#totalAns").textContent=total;
+    $("#correctAns").textContent=correct;
+    $("#streak").textContent=state.stats.streak||0;
+    $("#best").textContent=(state.stats.bestTestScore||0)+"%";
+    $("#badgePill").textContent=badgeFrom(state.stats);
+
+    $("#lastScore").textContent = state.stats.lastTestScore==null ? "—" : (state.stats.lastTestScore+"%");
+    $("#lastAt").textContent = state.stats.lastTestAt ? new Date(state.stats.lastTestAt).toLocaleString("he-IL") : "";
+  }
+
+  function setTab(tab){
+    state.tab=tab;
+    $$(".tabBtn").forEach(b=>b.classList.toggle("active", b.dataset.tab===tab));
+    $$(".tabPanel").forEach(p=>p.style.display="none");
+    $("#"+tab).style.display="block";
+  }
+
+  function updateSettingsUI(){
+    $("#modeSel").value=state.settings.mode;
+    $("#focusSel").value=state.settings.focus;
+    const sw=$("#audioSwitch");
+    sw.classList.toggle("on", !!state.settings.audio);
+    sw.setAttribute("aria-checked", state.settings.audio ? "true" : "false");
+  }
+
+  // ---------- Practice ----------
+  function startPractice(){
+    state.practice.items = pick(10, state.settings.focus);
+    state.practice.idx = 0;
+    state.practice.answered=false;
+    state.practice.given=null;
+    state.practice.ok=null;
+    renderPractice();
+  }
+
+  function currentPracticeQ(){
+    return state.practice.items[state.practice.idx];
+  }
+
+  function checkAnswer(q, given){
+    return norm(given) === norm(q.answer);
+  }
+
+  function submitPractice(given){
+    const q=currentPracticeQ();
+    if(!q || state.practice.answered) return;
+    const ok=checkAnswer(q, given);
+
+    state.stats.totalAnswered++;
+    if(ok) state.stats.correctAnswered++;
+    state.stats.streak = ok ? (state.stats.streak+1) : 0;
+
+    state.practice.answered=true;
+    state.practice.given=given;
+    state.practice.ok=ok;
+
+    save();
+    updateStatsUI();
+    renderPracticeFeedback(q, given, ok);
+  }
+
+  function nextPractice(){
+    state.practice.answered=false;
+    state.practice.given=null;
+    state.practice.ok=null;
+    $("#practiceFeedback").style.display="none";
+
+    state.practice.idx++;
+    if(state.practice.idx >= state.practice.items.length){
+      startPractice(); // refresh set
+      return;
+    }
+    renderPractice();
+  }
+
+  function renderPractice(){
+    const q=currentPracticeQ();
+    if(!q){
+      $("#practiceBox").innerHTML="<div class='muted'>אין שאלות זמינות.</div>";
+      return;
+    }
+    $("#practiceBox").innerHTML = `
+      <div class="qmeta">שאלה ${state.practice.idx+1} / ${state.practice.items.length} • סוג: <b>${q.type}</b></div>
+      <div class="qtext">${q.he}</div>
+      <div class="mini">${q.prompt}</div>
+    `;
+
+    const area=$("#practiceArea");
+    area.innerHTML="";
+
+    if(state.settings.mode==="mcq"){
+      const choices = shuffle(q.choices);
+      const wrap=document.createElement("div");
+      wrap.className="choices";
+      choices.forEach(c=>{
+        const btn=document.createElement("button");
+        btn.className="choice";
+        btn.textContent=c;
+        btn.onclick=()=> {
+          $$(".choice").forEach(x=>x.classList.remove("selected"));
+          btn.classList.add("selected");
+          submitPractice(c);
+        };
+        wrap.appendChild(btn);
+      });
+      area.appendChild(wrap);
+    }else{
+      area.innerHTML=`
+        <div class="label">הקלד את המשפט באנגלית</div>
+        <input id="practiceInput" class="input" placeholder="לדוגמה: I am studying now." />
+        <div class="row" style="margin-top:10px">
+          <button class="btn primary" id="practiceCheckBtn">בדוק</button>
+        </div>
+        <div class="mini">טיפ: לא חייב אותיות גדולות; חשוב am/is/are + ing.</div>
+      `;
+      const inp=$("#practiceInput");
+      inp.focus();
+      $("#practiceCheckBtn").onclick=()=>submitPractice(inp.value);
+      inp.addEventListener("keydown",(e)=>{ if(e.key==="Enter") submitPractice(inp.value); });
+    }
+  }
+
+  function renderPracticeFeedback(q, given, ok){
+    const fb=$("#practiceFeedback");
+    fb.style.display="block";
+    fb.innerHTML = `
+      <div class="row" style="justify-content:space-between">
+        <span class="tag ${ok?'ok':'bad'}">${ok?'✅ נכון':'❌ לא נכון'}</span>
+        <span class="mini">רצף נוכחי: <b>${state.stats.streak}</b></span>
+      </div>
+      <div class="hr"></div>
+      <div><b>התשובה הנכונה:</b> ${q.answer}</div>
+      ${ok ? "" : `<div class="muted" style="margin-top:6px"><b>מה ענית:</b> ${given || "(ריק)"}</div>`}
+      <div class="row" style="margin-top:10px">
+        <button class="btn primary" id="practiceNextBtn">הבא</button>
+        <button class="btn" id="practiceSpeakBtn">🔊 שמע שוב</button>
+        <button class="btn" id="goTestBtn">לעבור למבחן</button>
+      </div>
+      <div class="mini" style="margin-top:8px">טיפ: בשאלה → am/is/are בהתחלה. בשלילה → not / isn't / aren't.</div>
+    `;
+    $("#practiceNextBtn").onclick=nextPractice;
+    $("#practiceSpeakBtn").onclick=()=>speak(q.answer);
+    $("#goTestBtn").onclick=()=>{ setTab("test"); };
+  }
+
+  // ---------- Test ----------
+  function startTest(){
+    state.test.inProgress=true;
+    state.test.finished=false;
+    state.test.score=null;
+    state.test.idx=0;
+    state.test.answers={};
+    state.test.items = pick(20, state.settings.focus);
+    renderTest();
+  }
+
+  function currentTestQ(){ return state.test.items[state.test.idx]; }
+
+  function renderTest(){
+    const body=$("#testBody");
+    if(!state.test.inProgress && !state.test.finished){
+      body.innerHTML = `<div class="muted">לחץ על “התחל מבחן”.</div>`;
+      return;
+    }
+
+    if(state.test.inProgress){
+      const q=currentTestQ();
+      const given = state.test.answers[q.id] ?? "";
+      const progress = Math.round(((state.test.idx+1)/state.test.items.length)*100);
+
+      let answerUI="";
+      if(state.settings.mode==="mcq"){
+        const choices = shuffle(q.choices);
+        answerUI = `
+          <div class="choices">
+            ${choices.map(c=>`
+              <button class="choice ${given===c?'selected':''}" data-choice="${encodeURIComponent(c)}">${c}</button>
+            `).join("")}
+          </div>
+        `;
+      }else{
+        answerUI = `
+          <div class="label">הקלד תשובה</div>
+          <input id="testInput" class="input" placeholder="Write the full sentence..." value="${given.replace(/\"/g,'&quot;')}" />

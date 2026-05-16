@@ -1,0 +1,15 @@
+{
+  "name": "Present Progressive — הפועל ב\"ש",
+  "short_name": "PP ב\"ש",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#b91c1c",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='192'%20height='192'%3E%3Crect%20width='192'%20height='192'%20rx='44'%20fill='%23b91c1c'/%3E%3Ctext%20x='50%25'%20y='56%25'%20dominant-baseline='middle'%20text-anchor='middle'%20font-size='72'%20font-family='Arial'%20fill='white'%20font-weight='900'%3E%D7%91%22%D7%A9%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ]
+}
